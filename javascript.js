@@ -1,3 +1,4 @@
+
 // function to get a random choice from the computer
 function getComputerChoice() {
     let randomNumber = Math.floor(Math.random()*3)
@@ -16,8 +17,14 @@ function getComputerChoice() {
 
 // function to ask the user his choice
 function playerSelection() {
-    let choice = prompt("What do you choice?")
-    return choice
+    const myChoice = document.querySelectorAll(".choice");
+    myChoice.forEach((choice) => {
+        choice.addEventListener('click', () => {
+            let chosen = choice.textContent;
+            return chosen
+        
+    })
+});
 }
 
 // function to play a round of Rock, Paper, or Scissors
@@ -46,31 +53,51 @@ function playRound(playerSelection, computerSelection) {
     return verdict
 }
 
+function display() {
+    const container = document.querySelector('.container');
+    const div = document.createElement('div');
+    div.classList.add('display');
+    container.append(div);
+
+}
+
+function roundWinner(verdict) {
+    const div = document.querySelector('.display');
+    div.textContent = verdict
+}
+
 // function to start a game of Rock, Paper, or Scissors with a total of 5 rounds
 function game() {
+    display()
     let playerWins = 0
     let computerWins = 0
-    for (let i = 0; i < 5; i++) {
-        let choice = playerSelection()
-        let verdict = playRound(choice, getComputerChoice());
 
-        if (verdict.slice(0, 7) === "You win") {
-            playerWins++
-        } else if (verdict.slice(0, 8) === "You lose") {
-            computerWins++
-        }
+    const myChoice = document.querySelectorAll(".choice");
+    myChoice.forEach((choice) => {
+        choice.addEventListener('click', () => {
+            let verdict = playRound(choice.textContent, getComputerChoice())
+            if (verdict.slice(0, 7) === "You win") {
+                playerWins++
+            } else if (verdict.slice(0, 8) === "You lose") {
+                computerWins++
+            }
+            if (playerWins == 5) {
+                let message = 'You win the game with 5 points!';
+                roundWinner(message);
+                playerWins = 0
+                computerWins = 0
+            } else if (computerWins == 5) {
+                let message = 'You lose, computer has 5 points.';
+                roundWinner(message);
+                playerWins = 0
+                computerWins = 0
+            } else {
+                let message = verdict + " " + playerWins + "-" + computerWins
+                roundWinner(message);
+            }
 
-        alert(verdict)
-        console.log(verdict, playerWins, computerWins)
-    }
-
-    if (playerWins > computerWins) {
-        alert("You won the game!")
-    } else if (playerWins > computerWins) {
-        alert("You lost the game...")
-    } else {
-        alert("Fair match, equal scores.")
-    }
+        })
+    })
 }
 
 game()
